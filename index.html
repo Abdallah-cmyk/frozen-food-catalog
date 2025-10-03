@@ -59,7 +59,6 @@
     <main id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
 
         <!-- **بيانات المنتجات (Product Data)** -->
-        <!-- يتم تخزين البيانات هنا لتسهيل استخدامها في JavaScript. لا تظهر هذه البيانات مباشرة. -->
         <script id="product-data" type="application/json">
             [
                 {
@@ -158,7 +157,7 @@
     </footer>
 
     <!-- زر الواتساب العائم للتواصل العام -->
-    <a href="https://wa.me/9661234567890?text=مرحباً، أود الاستفسار عن منتجاتكم الغذائية المجمدة في الكتالوج." 
+    <a href="https://wa.me/201007727700?text=مرحباً، أود الاستفسار عن منتجاتكم الغذائية المجمدة في الكتالوج." 
        target="_blank" 
        class="whatsapp-float bg-green-500 text-white rounded-full p-4 hover:bg-green-600 transition duration-300">
         <!-- أيقونة واتساب SVG -->
@@ -166,9 +165,8 @@
     </a>
 
     <script>
-        // **الرقم الثابت للواتساب (يرجى التعديل)**
-        const WHATSAPP_NUMBER = "201007727700"
-          "; 
+        // **الرقم الثابت للواتساب (تم التعديل)**
+        const WHATSAPP_NUMBER = "201007727700"; 
         
         let products = [];
         
@@ -176,19 +174,29 @@
             // تحميل بيانات المنتجات من وسم Script
             try {
                 const dataScript = document.getElementById('product-data');
+                // التحقق من وجود البيانات
+                if (!dataScript || !dataScript.textContent) {
+                    console.error("Product data script not found or is empty.");
+                    return;
+                }
                 products = JSON.parse(dataScript.textContent);
                 renderProductCards(products);
             } catch (error) {
-                console.error("Failed to load product data:", error);
+                console.error("Failed to load or parse product data:", error);
             }
         });
 
         // دالة لعرض بطاقات المنتجات
         function renderProductCards(productsArray) {
             const container = document.getElementById('product-list');
+            if (!container) return; 
+
             container.innerHTML = ''; // تنظيف المحتوى
 
             productsArray.forEach(product => {
+                // دالة لإنشاء رابط واتساب للطلب الفردي
+                const whatsappOrderLink = generateWhatsappLink(product.name, 'طلب');
+                
                 const cardHtml = `
                     <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col" onclick="openModal(${product.id})">
                         <img src="${product.imgSrc}" 
@@ -207,7 +215,7 @@
                                     <button class="flex-1 bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-200 shadow-md text-sm sm:text-base">
                                         عرض التفاصيل
                                     </button>
-                                    <a href="${generateWhatsappLink(product.name, 'طلب')}" target="_blank" class="flex-1 bg-green-500 text-white font-semibold py-2 rounded-lg hover:bg-green-600 transition duration-200 shadow-md text-sm sm:text-base text-center">
+                                    <a href="${whatsappOrderLink}" target="_blank" onclick="event.stopPropagation();" class="flex-1 bg-green-500 text-white font-semibold py-2 rounded-lg hover:bg-green-600 transition duration-200 shadow-md text-sm sm:text-base text-center">
                                         اطلب الآن
                                     </a>
                                 </div>
@@ -225,9 +233,9 @@
             if (type === 'طلب') {
                 message = `مرحباً، أود طلب: *${productName}* من الكتالوج.`;
             } else {
-                message = `مرحباً، أود الاستفسار عن منتجاتكم المجمدة.`;
+                message = `مرحباً، أود الاستفسار عن منتجاتكم الغذائية المجمدة في الكتالوج.`;
             }
-            return `https://wa.me/${201007727700}?text=${encodeURIComponent(message)}`;
+            return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
         }
 
         // دالة لفتح المودال (النافذة المنبثقة)
@@ -235,6 +243,7 @@
             const product = products.find(p => p.id === productId);
             if (!product) return;
 
+            // تحديث محتوى المودال
             document.getElementById('modal-img').src = product.imgSrc;
             document.getElementById('modal-img').alt = product.name;
             document.getElementById('modal-category').textContent = product.category;
@@ -245,9 +254,11 @@
             // تحديث رابط واتساب داخل المودال
             document.getElementById('modal-whatsapp-link').href = generateWhatsappLink(product.name, 'طلب');
 
+            // إظهار المودال
             const modal = document.getElementById('product-modal');
             modal.classList.remove('invisible', 'opacity-0');
             modal.classList.add('visible', 'opacity-100');
+            document.body.style.overflow = 'hidden'; // منع التمرير في الخلفية
         }
 
         // دالة لإغلاق المودال
@@ -255,6 +266,7 @@
             const modal = document.getElementById('product-modal');
             modal.classList.remove('visible', 'opacity-100');
             modal.classList.add('invisible', 'opacity-0');
+            document.body.style.overflow = ''; // استعادة التمرير
         }
 
         // إغلاق المودال عند الضغط خارج المحتوى
