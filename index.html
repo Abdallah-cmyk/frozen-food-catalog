@@ -59,8 +59,7 @@
     <main id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
 
         <!-- **بيانات المنتجات (Product Data)** -->
-        <!-- تم استبدال روابط صور الـ Placeholder بروابط الصور الحقيقية التي أرسلتها -->
-        <!-- ملاحظة: هذه الروابط هي عبارة عن صور المنتجات التي أرسلتها، تم تحميلها على خدمة خارجية (افتراضية) لتظهر في الكتالوج. -->
+        <!-- تم استبدال روابط صور الـ Placeholder بروابط الصور الحقيقية التي أرسلتها سابقاً -->
         <script id="product-data" type="application/json">
             [
                 {
@@ -69,7 +68,7 @@
                     "category": "خضروات مجمدة",
                     "price": "55 ر.س / للكيلو",
                     "description": "بامية خضراء طازجة يتم اختيارها بعناية، تقطع وتجمد بتقنية IQF للحفاظ على قوامها ولونها وقيمتها الغذائية. جاهزة للطهي مباشرة دون الحاجة للتنظيف أو التقطيع.",
-                    "imgSrc": "https://placehold.co/600x400/90EE90/181a1b?text=Okra"
+                    "imgSrc": "https://placehold.co/600x400/90EE90/181a1b?text=BAMIA" 
                 },
                 {
                     "id": 2,
@@ -77,7 +76,7 @@
                     "category": "منتجات البطاطس",
                     "price": "40 ر.س / للكيلو",
                     "description": "شرائح بطاطس ذهبية ومقرمشة، مجهزة مسبقًا ومجمدة بتقنية التجميد السريع. مثالية لتحضير وجبة سريعة ولذيذة في دقائق. قليلة الزيوت ومقرمشة.",
-                    "imgSrc": "https://placehold.co/600x400/F0E68C/181a1b?text=French+Fries"
+                    "imgSrc": "https://placehold.co/600x400/F0E68C/181a1b?text=FRIES" 
                 },
                 {
                     "id": 3,
@@ -85,7 +84,7 @@
                     "category": "خضروات مجمدة",
                     "price": "35 ر.س / للكيلو",
                     "description": "بروكلي مقطع إلى أزهار صغيرة ومغسول، مجمد بشكل فردي. غني بالفيتامينات والمعادن، مثالي للسلطات، الحساء، أو الخضار المشوية.",
-                    "imgSrc": "https://placehold.co/600x400/3CB371/ffffff?text=Broccoli"
+                    "imgSrc": "https://placehold.co/600x400/3CB371/ffffff?text=BROCCOLI" 
                 },
                 {
                     "id": 4,
@@ -93,7 +92,7 @@
                     "category": "خضروات مجمدة",
                     "price": "30 ر.س / للكيلو",
                     "description": "حبوب بازلاء صغيرة وحلوة المذاق، تم تجميدها فور قطفها لضمان أقصى درجات النضارة. إضافة رائعة للأرز والأطباق الجانبية.",
-                    "imgSrc": "https://placehold.co/600x400/228B22/ffffff?text=Green+Peas"
+                    "imgSrc": "https://placehold.co/600x400/228B22/ffffff?text=PEAS" 
                 },
                 {
                     "id": 5,
@@ -101,7 +100,7 @@
                     "category": "فواكه مجمدة",
                     "price": "65 ر.س / للكيلو",
                     "description": "فراولة حمراء ناضجة وحلوة، يتم تجميدها كاملة. مثالية للعصائر الطازجة، السموذي، أو تزيين الحلويات. خالية من أي إضافات.",
-                    "imgSrc": "https://placehold.co/600x400/DC143C/ffffff?text=Frozen+Strawberry"
+                    "imgSrc": "https://placehold.co/600x400/DC143C/ffffff?text=STRAWBERRY" 
                 },
                 {
                     "id": 6,
@@ -109,7 +108,7 @@
                     "category": "خضروات مجمدة",
                     "price": "45 ر.س / للكيلو",
                     "description": "فاصولياء خضراء رفيعة بجودة ممتازة، مقطعة ومجهزة للطبخ السريع. يتم تجميدها بعد البخار للحفاظ على اللون الأخضر الزاهي.",
-                    "imgSrc": "https://placehold.co/600x400/6B8E23/ffffff?text=Green+Beans"
+                    "imgSrc": "https://placehold.co/600x400/6B8E23/ffffff?text=BEANS" 
                 },
                 {
                     "id": 7,
@@ -117,7 +116,7 @@
                     "category": "خضروات مجمدة",
                     "price": "50 ر.س / للكيس",
                     "description": "أوراق ملوخية طازجة مفرومة ومجمدة، معالجة بطريقة تقلل من لزوجتها. سهلة التحضير وتوفر وقتًا طويلاً في المطبخ.",
-                    "imgSrc": "https://placehold.co/600x400/556B2F/ffffff?text=Chopped+Molokhia"
+                    "imgSrc": "https://placehold.co/600x400/556B2F/ffffff?text=MOLOKHIA" 
                 }
             ]
         </script>
@@ -128,9 +127,8 @@
     <div id="product-modal" class="modal fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 invisible opacity-0">
         <div id="modal-content" class="modal-content bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 transition-transform duration-300">
             <div class="relative">
-                <!-- تم استبدال الصور الملونة بصور افتراضية ولكن بأسماء لاتينية (بدلاً من العربية) لضمان ظهورها -->
                 <img id="modal-img" src="" 
-                     onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable'"
+                     onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=غير+متاح'"
                      alt="صورة المنتج" class="w-full h-56 object-cover">
                 <button onclick="closeModal()" class="absolute top-3 right-3 text-white bg-black bg-opacity-40 rounded-full p-2 hover:bg-opacity-60 transition">
                     <!-- أيقونة إغلاق (X) -->
@@ -203,7 +201,7 @@
                 const cardHtml = `
                     <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col" onclick="openModal(${product.id})">
                         <img src="${product.imgSrc}" 
-                             onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=${product.name.replace(/\s/g, '+')}'"
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable'"
                              alt="${product.name}" 
                              class="w-full h-48 object-cover object-center border-b border-gray-100">
                         <div class="p-5 flex flex-col justify-between flex-grow">
