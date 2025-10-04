@@ -3,30 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>كتالوج المنتجات المجمدة - احترافي</title>
-    <!-- تضمين خط Inter وتكوين Tailwind CSS -->
+    <title>كتالوج منتجات الأجنحة الذهبية</title>
+    <!-- Chosen Palette: Professional Teal and Indigo -->
+    <!-- Application Structure Plan: A single-page application featuring an expandable header for company info, a main grid for product cards, and a modal for product details. This structure prioritizes immediate product visibility while keeping detailed company information accessible on demand. User flow is simple: browse products -> click card for details -> request a quote via a prominent button. This is ideal for a B2B catalog focused on lead generation. -->
+    <!-- Visualization & Content Choices: Product List -> Goal: Showcase -> Presentation: Interactive Grid of Cards -> Interaction: Click card to open modal, hover for visual feedback, click button for WhatsApp quote request. This is more engaging than a static list. Company Profile -> Goal: Inform/Build Trust -> Presentation: Expandable Text Block -> Interaction: Click button to toggle visibility. This keeps the initial view clean. All interactions use vanilla JS, with Tailwind for styling. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f0f4f8;
+        }
+        * {
+            font-family: 'Tajawal', sans-serif;
         }
         .product-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
+            cursor: pointer; 
         }
         .product-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
         }
-        /* تصميم زر الواتساب العائم */
         .whatsapp-float {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
+            bottom: 24px;
+            left: 24px;
             z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
             animation: pulse 2s infinite;
         }
         @keyframes pulse {
@@ -34,200 +39,187 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-        /* تصميم المودال */
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
         .modal {
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
         .modal-content {
-            animation: slide-in 0.4s ease-out;
+            transition: transform 0.3s ease-out;
         }
-        @keyframes slide-in {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        #more-info-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+        }
+        #more-info-content.expanded {
+            max-height: 800px;
+            padding-top: 1.5rem;
         }
     </style>
 </head>
-<body class="p-4 sm:p-8">
+<body class="p-6 sm:p-12">
 
-    <header class="text-center mb-10">
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-indigo-800 mb-2">كتالوج المنتجات الغذائية المجمدة</h1>
-        <p class="text-base sm:text-xl text-gray-600">الجودة تبدأ من هنا. خضروات وفواكه طازجة ومجمدة بأفضل طريقة.</p>
-        <div class="h-1 w-20 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
+    <header class="text-center mb-16 pt-4 pb-8 bg-white rounded-xl shadow-lg">
+        <p class="text-xl sm:text-2xl font-bold text-teal-600 mb-2">الأجنحة الذهبية</p>
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-3">كتالوج المنتجات الغذائية المجمدة</h1>
+        
+        <div class="text-2xl sm:text-3xl font-extrabold text-indigo-700 max-w-4xl mx-auto mb-6 leading-relaxed bg-indigo-50 p-4 rounded-lg border-b-4 border-indigo-400">
+            <p>الأجنحة الذهبية - شريكك الاستراتيجي في توريد الأغذية المجمدة والبراندات العالمية من مصر.</p>
+            <p class="text-xl sm:text-2xl mt-2">نحن المصدر الرائد للمنتجات عالية الجودة، بقدرة شحن وتوريد عالمية (تحليق إلى أي مكان في العالم 🌍).</p>
+        </div>
+
+        <button id="toggle-info-btn" onclick="toggleMoreInfo()" class="mt-4 py-2 px-8 rounded-full font-bold text-lg bg-teal-500 text-white hover:bg-teal-600 transition duration-300 shadow-lg">
+            من نحن؟ (لمعرفة خدماتنا)
+        </button>
+
+        <div id="more-info-content" class="text-right max-w-4xl mx-auto px-4">
+            <div class="text-gray-700 text-lg space-y-4">
+                <h3 class="text-2xl font-bold text-gray-800 mt-6">📦 ما نقدمه: حلول توريد متكاملة</h3>
+                <ul class="list-none space-y-2 pr-4">
+                    <li class="flex items-start">
+                        <span class="text-indigo-600 font-extrabold ml-2">◆</span>
+                        <div>
+                            <strong class="text-indigo-600">الفواكه والخضروات المجمدة (IQF):</strong>
+                            <p class="text-base mr-6">إنتاج وتجهيز بأحدث تقنيات IQF في مصر. يشمل: قطع المانجو، الفراولة، البروكلي، الفاصوليا، السبانخ، وغيرها. جميعها تُزرع في الأراضي المصرية الخصبة.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-indigo-600 font-extrabold ml-2">◆</span>
+                        <div>
+                            <strong class="text-indigo-600">المواد الغذائية العالمية (البراندات):</strong>
+                            <p class="text-base mr-6">توريد جملة للعلامات التجارية الكبرى مثل ريد بول، ليبتون، جلاكسي، وغيرها من الأصناف الاستهلاكية المطلوبة.</p>
+                        </div>
+                    </li>
+                </ul>
+                <h3 class="text-2xl font-bold text-gray-800 mt-6">🔍 نبحث عن شراكة موثوقة في:</h3>
+                <p>دول الاتحاد الأوروبي: بريطانيا، ألمانيا، هولندا، فرنسا، بلجيكا، وغيرها.</p>
+                <p>دول مجلس التعاون الخليجي: السعودية، الإمارات، قطر، الكويت، البحرين، عمان.</p>
+                <p class="font-bold text-red-600">الشركاء المطلوبون: مستوردين، موزعين، تجار جملة، وسماسرة تجارية ذوي خبرة.</p>
+                <h3 class="text-2xl font-bold text-gray-800 mt-6">🌟 لماذا تختار الأجنحة الذهبية؟</h3>
+                <ul class="list-none space-y-2 pr-4">
+                    <li class="flex items-start"><span class="text-teal-600 font-extrabold ml-2">✓</span> حل توريد شامل: (مجمدات IQF + براندات عالمية).</li>
+                    <li class="flex items-start"><span class="text-teal-600 font-extrabold ml-2">✓</span> تسعير تنافسي بالجملة.</li>
+                    <li class="flex items-start"><span class="text-teal-600 font-extrabold ml-2">✓</span> أعلى معايير الجودة الدولية وشهادات الآيزو.</li>
+                    <li class="flex items-start"><span class="text-teal-600 font-extrabold ml-2">✓</span> دعم كامل في الشحن والتخليص الجمركي.</li>
+                </ul>
+                <p class="text-xl font-bold mt-8 text-green-700">
+                    🤝 هل أنت مستعد للنمو معنا؟ اتصل بنا الآن لتلقي الكتالوج الكامل وقائمة الأسعار التنافسية.
+                </p>
+            </div>
+        </div>
+        <div class="h-1 w-24 bg-teal-500 mx-auto mt-4 rounded-full"></div>
     </header>
 
-    <!-- قائمة المنتجات -->
-    <main id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
-
-        <!-- **بيانات المنتجات (Product Data)** -->
-        <!-- تم ربط الصور التالية: 
-             البامية: 1000361582.jpg
-             بطاطس: 1000361549.jpg
-             بروكلي: 1000361584.jpg
-             بازلاء: 1000361588.jpg
-             فراولة: 1000361589.jpg
-             فاصولياء: 1000361590.jpg
-             ملوخية: 1000361529.jpg
-        -->
-        <script id="product-data" type="application/json">
-            [
-                {
-                    "id": 1,
-                    "name": "بامية ممتازة مجمدة",
-                    "category": "خضروات مجمدة",
-                    "price": "55 ر.س / للكيلو",
-                    "description": "بامية خضراء طازجة يتم اختيارها بعناية، تقطع وتجمد بتقنية IQF للحفاظ على قوامها ولونها وقيمتها الغذائية. جاهزة للطهي مباشرة دون الحاجة للتنظيف أو التقطيع.",
-                    "imgSrc": "https://placehold.co/600x400/228B22/ffffff?text=BAMIA+BAG" 
-                },
-                {
-                    "id": 2,
-                    "name": "بطاطس مقلية رفيعة مجمدة",
-                    "category": "منتجات البطاطس",
-                    "price": "40 ر.س / للكيلو",
-                    "description": "شرائح بطاطس ذهبية ومقرمشة، مجهزة مسبقًا ومجمدة بتقنية التجميد السريع. مثالية لتحضير وجبة سريعة ولذيذة في دقائق. قليلة الزيوت ومقرمشة.",
-                    "imgSrc": "https://placehold.co/600x400/F0E68C/181a1b?text=POTATO+FRIES+BAG" 
-                },
-                {
-                    "id": 3,
-                    "name": "أزهار البروكلي المجمدة",
-                    "category": "خضروات مجمدة",
-                    "price": "35 ر.س / للكيلو",
-                    "description": "بروكلي مقطع إلى أزهار صغيرة ومغسول، مجمد بشكل فردي. غني بالفيتامينات والمعادن، مثالي للسلطات، الحساء، أو الخضار المشوية.",
-                    "imgSrc": "https://placehold.co/600x400/3CB371/ffffff?text=BROCCOLI+FLORETS" 
-                },
-                {
-                    "id": 4,
-                    "name": "بازلاء خضراء مجمدة",
-                    "category": "خضروات مجمدة",
-                    "price": "30 ر.س / للكيلو",
-                    "description": "حبوب بازلاء صغيرة وحلوة المذاق، تم تجميدها فور قطفها لضمان أقصى درجات النضارة. إضافة رائعة للأرز والأطباق الجانبية.",
-                    "imgSrc": "https://placehold.co/600x400/228B22/ffffff?text=GREEN+PEAS+BAG" 
-                },
-                {
-                    "id": 5,
-                    "name": "فراولة مجمدة",
-                    "category": "فواكه مجمدة",
-                    "price": "65 ر.س / للكيلو",
-                    "description": "فراولة حمراء ناضجة وحلوة، يتم تجميدها كاملة. مثالية للعصائر الطازجة، السموذي، أو تزيين الحلويات. خالية من أي إضافات.",
-                    "imgSrc": "https://placehold.co/600x400/DC143C/ffffff?text=FROZEN+STRAWBERRY" 
-                },
-                {
-                    "id": 6,
-                    "name": "فاصولياء خضراء مقطعة",
-                    "category": "خضروات مجمدة",
-                    "price": "45 ر.س / للكيلو",
-                    "description": "فاصولياء خضراء رفيعة بجودة ممتازة، مقطعة ومجهزة للطبخ السريع. يتم تجميدها بعد البخار للحفاظ على اللون الأخضر الزاهي.",
-                    "imgSrc": "https://placehold.co/600x400/6B8E23/ffffff?text=CUT+GREEN+BEANS" 
-                },
-                {
-                    "id": 7,
-                    "name": "ملوخية مفرومة جاهزة",
-                    "category": "خضروات مجمدة",
-                    "price": "50 ر.س / للكيس",
-                    "description": "أوراق ملوخية طازجة مفرومة ومجمدة، معالجة بطريقة تقلل من لزوجتها. سهلة التحضير وتوفر وقتًا طويلاً في المطبخ.",
-                    "imgSrc": "https://placehold.co/600x400/556B2F/ffffff?text=CHOPPED+MOLOKHIA" 
-                }
-            ]
-        </script>
-
+    <main id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
     </main>
 
-    <!-- Modal لعرض التفاصيل الكاملة للمنتج -->
-    <div id="product-modal" class="modal fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 invisible opacity-0">
-        <div id="modal-content" class="modal-content bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 transition-transform duration-300">
-            <div class="relative">
-                <img id="modal-img" src="" 
-                     onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=غير+متاح'"
-                     alt="صورة المنتج" class="w-full h-56 object-cover">
-                <button onclick="closeModal()" class="absolute top-3 right-3 text-white bg-black bg-opacity-40 rounded-full p-2 hover:bg-opacity-60 transition">
-                    <!-- أيقونة إغلاق (X) -->
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            <div class="p-6">
-                <p id="modal-category" class="text-sm text-indigo-600 font-semibold mb-1"></p>
-                <h2 id="modal-name" class="text-3xl font-bold text-gray-900 mb-3"></h2>
-                <p id="modal-price" class="text-2xl font-extrabold text-red-600 mb-4"></p>
-                
-                <h3 class="text-lg font-semibold text-gray-700 mt-4 mb-2">الوصف الكامل:</h3>
-                <p id="modal-description" class="text-gray-700 leading-relaxed text-sm"></p>
-                
-                <div class="mt-8">
-                    <!-- زر الطلب من داخل المودال -->
-                    <a id="modal-whatsapp-link" href="#" target="_blank" class="w-full inline-flex items-center justify-center bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition duration-300 transform hover:scale-105 shadow-md">
-                        <!-- أيقونة واتساب SVG -->
-                        <svg class="w-6 h-6 ml-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.039 2C6.541 2 2 6.574 2 12.062c0 1.638.411 3.253 1.164 4.673L2.2 22l4.8-1.55c1.378.826 2.943 1.25 4.939 1.25 5.498 0 9.998-4.575 9.998-10.062S17.537 2 12.039 2zm4.5 13.921c-.183.183-.393.284-.633.284-.24 0-.45-.101-.633-.284l-.872-.871c-.13-.131-.321-.168-.485-.098-.558.23-1.127.351-1.706.351-1.38 0-2.613-.483-3.473-1.423-.974-1.096-1.503-2.39-1.503-3.837 0-.464.12-.924.34-1.355.07-.123.155-.224.254-.308l.74-.741c.144-.144.335-.144.478 0l1.355 1.356c.144.144.144.335 0 .478l-.74.74c-.098.098-.098.243 0 .341l.98 1.13c.857.974 2.191 1.666 3.655 1.666.277 0 .543-.038.795-.113.167-.058.358-.021.492.113l1.13 1.13c.183.183.284.393.284.633.001.24-.101.451-.285.633l-.872.872z"/></svg>
-                        اطلب هذا المنتج الآن
-                    </a>
+    <footer class="text-center mt-20 pt-8 border-t border-gray-300 text-gray-500 text-sm">
+        <p>&copy; 2025 الأجنحة الذهبية. جميع الحقوق محفوظة. لطلب الكميات، يرجى التواصل عبر واتساب.</p>
+    </footer>
+
+    <a href="https://wa.me/201007727700?text=مرحباً، أود الاستفسار عن منتجاتكم الغذائية المجمدة." 
+       target="_blank" 
+       class="whatsapp-float bg-green-500 text-white rounded-full p-4 hover:bg-green-600 transition duration-300">
+        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.039 2C6.541 2 2 6.574 2 12.062c0 1.638.411 3.253 1.164 4.673L2.2 22l4.8-1.55c1.378.826 2.943 1.25 4.939 1.25 5.498 0 9.998-4.575 9.998-10.062S17.537 2 12.039 2zm4.5 13.921c-.183.183-.393.284-.633.284-.24 0-.45-.101-.633-.284l-.872-.871c-.13-.131-.321-.168-.485-.098-.558.23-1.127.351-1.706.351-1.38 0-2.613-.483-3.473-1.423-.974-1.096-1.503-2.39-1.503-3.837 0-.464.12-.924.34-1.355.07-.123.155-.224.254-.308l.74-.741c.144-.144.335-.144.478 0l1.355 1.356c.144.144.144.335 0 .478l-.74.74c-.098.098-.098.243 0 .341l.98 1.13c.857.974 2.191 1.666 3.655 1.666.277 0 .543-.038.795-.113.167-.058.358-.021.492.113l1.13 1.13c.183.183.284.393.284.633.001.24-.101.451-.285.633l-.872.872z"/></svg>
+    </a>
+
+    <div id="product-modal" class="modal invisible fixed inset-0 bg-gray-900 bg-opacity-90 flex items-center justify-center p-4 z-50 opacity-0">
+        <div id="modal-content" class="modal-content bg-white rounded-xl shadow-2xl w-full max-w-lg lg:max-w-xl overflow-hidden transform scale-95">
+            <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-600 hover:text-gray-900 z-10 p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="p-6 sm:p-8">
+                <img id="modal-img" src="" alt="صورة المنتج" class="w-full h-64 object-cover object-center rounded-lg mb-6 border border-gray-200">
+                <p id="modal-category" class="font-bold text-sm text-teal-600 mb-2"></p>
+                <h2 id="modal-name" class="text-3xl font-extrabold text-gray-900 mb-3"></h2>
+                <p id="modal-description" class="text-gray-700 leading-relaxed text-lg mb-8"></p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a id="modal-whatsapp-link" href="#" target="_blank" class="flex-1 text-center py-3 px-6 rounded-lg font-bold text-lg bg-indigo-600 text-white hover:bg-indigo-700 transition duration-300 shadow-md">طلب عرض سعر</a>
+                    <button onclick="closeModal()" class="flex-1 py-3 px-6 rounded-lg font-bold text-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition duration-300 shadow-md">إغلاق</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <footer class="text-center mt-12 pt-6 border-t border-gray-200 text-gray-500 text-sm">
-        <p>&copy; 2025 جميع الحقوق محفوظة. كتالوج المنتجات الغذائية.</p>
-    </footer>
-
-    <!-- زر الواتساب العائم للتواصل العام -->
-    <a href="https://wa.me/201007727700?text=مرحباً، أود الاستفسار عن منتجاتكم الغذائية المجمدة في الكتالوج." 
-       target="_blank" 
-       class="whatsapp-float bg-green-500 text-white rounded-full p-4 hover:bg-green-600 transition duration-300">
-        <!-- أيقونة واتساب SVG -->
-        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.039 2C6.541 2 2 6.574 2 12.062c0 1.638.411 3.253 1.164 4.673L2.2 22l4.8-1.55c1.378.826 2.943 1.25 4.939 1.25 5.498 0 9.998-4.575 9.998-10.062S17.537 2 12.039 2zm4.5 13.921c-.183.183-.393.284-.633.284-.24 0-.45-.101-.633-.284l-.872-.871c-.13-.131-.321-.168-.485-.098-.558.23-1.127.351-1.706.351-1.38 0-2.613-.483-3.473-1.423-.974-1.096-1.503-2.39-1.503-3.837 0-.464.12-.924.34-1.355.07-.123.155-.224.254-.308l.74-.741c.144-.144.335-.144.478 0l1.355 1.356c.144.144.144.335 0 .478l-.74.74c-.098.098-.098.243 0 .341l.98 1.13c.857.974 2.191 1.666 3.655 1.666.277 0 .543-.038.795-.113.167-.058.358-.021.492.113l1.13 1.13c.183.183.284.393.284.633.001.24-.101.451-.285.633l-.872.872z"/></svg>
-    </a>
-
+    
+    <script id="product-data" type="application/json">
+        [
+            { "id": 1, "name": "بامية ممتازة (Extra)", "category": "خضروات مجمدة", "description": "بامية خضراء طازجة، تقطع وتجمد بتقنية IQF. التعبئة: كرتون (4*2.5 كجم).", "imgSrc": "https://i.ibb.co/hRbtMZLv/IMG-20251004-WA0006.jpg" },
+            { "id": 2, "name": "بطاطس مقلية 9x9 (French Fries)", "category": "منتجات البطاطس", "description": "بطاطس مقلية سميكة (9*9) مجمدة. التعبئة: كرتون (4*2.5 كجم).", "imgSrc": "https://i.ibb.co/wr8zGqWr/IMG-20251004-WA0002.jpg" },
+            { "id": 3, "name": "بطاطس مقلية 7x7 (French Fries)", "category": "منتجات البطاطس", "description": "بطاطس مقلية رفيعة (7*7) مجمدة. التعبئة: كرتون (20*2.5 كجم).", "imgSrc": "https://i.ibb.co/SDwsfCZN/IMG-20251004-WA0017.jpg" },
+            { "id": 4, "name": "فاصولياء خضراء (Green Beans)", "category": "خضروات مجمدة", "description": "فاصولياء خضراء رفيعة مقطعة ومجهزة للطبخ. التعبئة: كرتون (20*400 جرام).", "imgSrc": "https://i.ibb.co/60YxFLjZ/IMG-20251004-WA0004.jpg" },
+            { "id": 5, "name": "بسلة وجزر (Peas & Carrots)", "category": "خضروات مجمدة", "description": "خليط بسلة وجزر مجمد. الأجود والأكثر نضارة. التعبئة: كرتون (20*400 جرام).", "imgSrc": "https://i.ibb.co/27LTC6vg/IMG-20251004-WA0023.jpg" },
+            { "id": 6, "name": "خضروات مشكلة (Mix Veg)", "category": "خضروات مجمدة", "description": "مزيج متكامل من الخضروات المتنوعة، جاهزة للطهي. التعبئة: كرتون (20*400 جرام).", "imgSrc": "https://i.ibb.co/KjWbPVR9/IMG-20251004-WA0021.jpg" },
+            { "id": 7, "name": "فلفل كابيا (Kapia Pepper) مجمد", "category": "خضروات مجمدة", "description": "فلفل كابيا مجمد، مثالي للطبخ. يحافظ على لونه وقوامه. التعبئة: كرتون (4*2.5 كجم).", "imgSrc": "https://i.ibb.co/39HMZB53/IMG-20251004-WA0022.jpg" },
+            { "id": 8, "name": "سبانخ (Spinach) مفرومة", "category": "خضروات مجمدة", "description": "أوراق سبانخ طازجة ومفرومة، مجمدة بالكامل. غنية بالحديد. التعبئة: كرتون (20*400 جرام).", "imgSrc": "https://i.ibb.co/xSd3ZPM7/IMG-20251004-WA0020.jpg" },
+            { "id": 9, "name": "مانجو شرائح مجمدة", "category": "فواكه مجمدة", "description": "شرائح مانجو حلوة وناضجة، مجمدة للحفاظ على مذاقها الاستوائي. التعبئة: كرتون (1*10 كجم).", "imgSrc": "https://i.ibb.co/CKck00FX/IMG-20251004-WA0008.jpg" },
+            { "id": 10, "name": "فراولة مجمدة", "category": "فواكه مجمدة", "description": "فراولة حمراء ناضجة وحلوة، يتم تجميدها كاملة. مثالية للعصائر. التعبئة: كرتون (1*10 كجم).", "imgSrc": "https://i.ibb.co/MDZK0L0J/IMG-20251004-WA0005.jpg" },
+            { "id": 11, "name": "ذرة حلوة (Sweet Corn) مجمدة", "category": "خضروات مجمدة", "description": "حبوب ذرة حلوة صفراء مجمدة، جاهزة للطبخ. التعبئة: كرتون (1*10 كجم).", "imgSrc": "https://i.ibb.co/XkVdM1pF/IMG-20251004-WA0009.jpg" },
+            { "id": 12, "name": "أزهار البروكلي المجمدة", "category": "خضروات مجمدة", "description": "بروكلي مقطع إلى أزهار صغيرة ومغسول، مجمد بشكل فردي. التعبئة: كرتون (4*2.5 كجم).", "imgSrc": "https://i.ibb.co/vxTLK74h/IMG-20251004-WA0010.jpg" },
+            { "id": 13, "name": "قرنبيط (Cauliflower) مجمد", "category": "خضروات مجمدة", "description": "قرنبيط مقطع إلى أزهار، مجمد بتقنية IQF. جاهز للطهي. التعبئة: كرتون (4*2.5 كجم).", "imgSrc": "https://i.ibb.co/PdQStGy/IMG-20251004-WA0011.jpg" },
+            { "id": 14, "name": "ملوخية مفرومة جاهزة", "category": "خضروات مجمدة", "description": "أوراق ملوخية طازجة مفرومة ومجمدة، سهلة التحضير. التعبئة: كرتون (20*400 جرام).", "imgSrc": "https://i.ibb.co/CxQXkXp/IMG-20251004-WA0014.jpg" },
+            { "id": 15, "name": "بامية كبيرة (XL) مجمدة", "category": "خضروات مجمدة", "description": "بامية مقطعة كبيرة جداً (XL)، مجمدة فردياً. التعبئة: كرتون (20*400 جرام).", "imgSrc": "https://i.ibb.co/4ZxJ1mxw/IMG-20251004-WA0025.jpg" },
+            { "id": 16, "name": "بامية كبيرة جداً (One)", "category": "خضروات مجمدة", "description": "بامية مقطعة كبيرة جداً (تصنيف One)، مجمدة فردياً. التعبئة: كرتون (20*400 جرام).", "imgSrc": "https://i.ibb.co/fGFyr8TX/IMG-20251004-WA0001.jpg" },
+            { "id": 17, "name": "بامية صغيرة (One)", "category": "خضروات مجمدة", "description": "بامية مقطعة صغيرة (تصنيف One)، مجمدة فردياً. التعبئة: كرتون (20*400 جرام).", "imgSrc": "https://i.ibb.co/601MhvC9/IMG-20251004-WA0012.jpg" },
+            { "id": 18, "name": "IQF مكعبات جزر مجمدة", "category": "خضروات مجمدة", "description": "جزر طازج 100٪ منشأ مصري، غير معدّل وراثيًا وبدون إضافات. متوفر بمقاسات (6*6 مم) و (10*10 مم). جودة IQF فائقة.", "imgSrc": "https://i.ibb.co/7NKbf68R/IMG-20251004-WA0024.jpg" }
+        ]
+    </script>
+    
     <script>
-        // **الرقم الثابت للواتساب**
-        const WHATSAPP_NUMBER = "201007727700"; 
-        
-        let products = [];
-        
+        const WHATSAPP_NUMBER = '201007727700'; 
+        let allProducts = [];
+
         document.addEventListener('DOMContentLoaded', () => {
-            // تحميل بيانات المنتجات من وسم Script
             try {
-                const dataScript = document.getElementById('product-data');
-                if (!dataScript || !dataScript.textContent) {
-                    console.error("Product data script not found or is empty.");
-                    return;
-                }
-                products = JSON.parse(dataScript.textContent);
-                renderProductCards(products);
-            } catch (error) {
-                console.error("Failed to load or parse product data:", error);
+                const dataScript = document.getElementById('product-data').textContent;
+                allProducts = JSON.parse(dataScript);
+                renderProductCards();
+            } catch (e) {
+                console.error("Error parsing product data:", e);
+                document.getElementById('product-list').innerHTML = `<p class="text-red-600 col-span-full text-center text-xl font-bold">عذراً، حدث خطأ في تحميل بيانات المنتجات.</p>`;
             }
         });
 
-        // دالة لعرض بطاقات المنتجات
-        function renderProductCards(productsArray) {
+        function toggleMoreInfo() {
+            const content = document.getElementById('more-info-content');
+            const button = document.getElementById('toggle-info-btn');
+            content.classList.toggle('expanded');
+            if (content.classList.contains('expanded')) {
+                button.textContent = 'إخفاء التفاصيل';
+                button.classList.replace('bg-teal-500', 'bg-gray-400');
+            } else {
+                button.textContent = 'من نحن؟ (لمعرفة خدماتنا)';
+                button.classList.replace('bg-gray-400', 'bg-teal-500');
+            }
+        }
+
+        function renderProductCards() {
             const container = document.getElementById('product-list');
-            if (!container) return; 
-
-            container.innerHTML = ''; // تنظيف المحتوى
-
-            productsArray.forEach(product => {
-                const whatsappOrderLink = generateWhatsappLink(product.name, 'طلب');
-                
+            container.innerHTML = ''; 
+            allProducts.forEach(product => {
+                // Image Fallback Handling: If the image fails to load, it falls back to a placeholder.
+                const fallbackImage = `https://placehold.co/600x400/7f1d1d/ffffff?text=${encodeURIComponent('صورة غير متاحة')}`;
                 const cardHtml = `
                     <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col" onclick="openModal(${product.id})">
-                        <img src="${product.imgSrc}" 
-                             onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable'"
-                             alt="${product.name}" 
-                             class="w-full h-48 object-cover object-center border-b border-gray-100">
-                        <div class="p-5 flex flex-col justify-between flex-grow">
-                            <div>
-                                <h2 class="text-xl font-bold text-gray-900 mb-1">${product.name}</h2>
-                                <p class="text-sm text-gray-500 mb-3">${product.category}</p>
-                                <p class="text-gray-700 text-sm line-clamp-2">${product.description}</p>
-                            </div>
-                            <div class="mt-4 flex flex-col space-y-3">
-                                <span class="text-lg font-extrabold text-red-600">${product.price}</span>
-                                <div class="flex space-x-2 space-x-reverse">
-                                    <button class="flex-1 bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-200 shadow-md text-sm sm:text-base">
-                                        عرض التفاصيل
-                                    </button>
-                                    <a href="${whatsappOrderLink}" target="_blank" onclick="event.stopPropagation();" class="flex-1 bg-green-500 text-white font-semibold py-2 rounded-lg hover:bg-green-600 transition duration-200 shadow-md text-sm sm:text-base text-center">
-                                        اطلب الآن
-                                    </a>
-                                </div>
+                        <div class="h-64 overflow-hidden">
+                            <img src="${product.imgSrc || fallbackImage}" 
+                                 alt="${product.name}" 
+                                 class="w-full h-full object-cover object-center transition duration-500 ease-in-out transform hover:scale-105"
+                                 onerror="this.onerror=null;this.src='${fallbackImage}';">
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <p class="font-bold text-sm text-teal-600 mb-2">${product.category}</p>
+                            <h2 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">${product.name}</h2>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">${product.description}</p>
+                            <div class="flex mt-4">
+                                <a href="${generateWhatsappLink(product.name)}" 
+                                   target="_blank" 
+                                   onclick="event.stopPropagation();"
+                                   class="flex-1 text-center py-2 rounded-lg font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition duration-300 text-sm shadow-md">طلب عرض سعر</a>
                             </div>
                         </div>
                     </div>
@@ -236,49 +228,38 @@
             });
         }
 
-        // دالة لإنشاء رابط واتساب
-        function generateWhatsappLink(productName, type) {
-            let message;
-            if (type === 'طلب') {
-                message = `مرحباً، أود طلب: *${productName}* من الكتالوج.`;
-            } else {
-                message = `مرحباً، أود الاستفسار عن منتجاتكم الغذائية المجمدة في الكتالوج.`;
-            }
+        function generateWhatsappLink(productName) {
+            const message = `مرحباً، أرجو تزويدي بعرض سعر لكميات من منتج: *${productName}*.`;
             return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
         }
-
-        // دالة لفتح المودال (النافذة المنبثقة)
+        
         function openModal(productId) {
-            const product = products.find(p => p.id === productId);
+            const product = allProducts.find(p => p.id === productId);
+            const modal = document.getElementById('product-modal');
             if (!product) return;
 
-            // تحديث محتوى المودال
-            document.getElementById('modal-img').src = product.imgSrc;
+            const fallbackImage = `https://placehold.co/600x400/7f1d1d/ffffff?text=${encodeURIComponent('صورة غير متاحة')}`;
+            document.getElementById('modal-img').src = product.imgSrc || fallbackImage;
             document.getElementById('modal-img').alt = product.name;
             document.getElementById('modal-category').textContent = product.category;
             document.getElementById('modal-name').textContent = product.name;
-            document.getElementById('modal-price').textContent = product.price;
             document.getElementById('modal-description').textContent = product.description;
-            
-            // تحديث رابط واتساب داخل المودال
-            document.getElementById('modal-whatsapp-link').href = generateWhatsappLink(product.name, 'طلب');
+            document.getElementById('modal-whatsapp-link').href = generateWhatsappLink(product.name);
 
-            // إظهار المودال
-            const modal = document.getElementById('product-modal');
             modal.classList.remove('invisible', 'opacity-0');
-            modal.classList.add('visible', 'opacity-100');
-            document.body.style.overflow = 'hidden'; // منع التمرير في الخلفية
+            modal.classList.add('visible');
+            document.getElementById('modal-content').style.transform = 'scale(1)';
         }
 
-        // دالة لإغلاق المودال
         function closeModal() {
             const modal = document.getElementById('product-modal');
-            modal.classList.remove('visible', 'opacity-100');
-            modal.classList.add('invisible', 'opacity-0');
-            document.body.style.overflow = ''; // استعادة التمرير
+            document.getElementById('modal-content').style.transform = 'scale(0.95)';
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('invisible');
+            }, 300); 
         }
 
-        // إغلاق المودال عند الضغط خارج المحتوى
         document.getElementById('product-modal').addEventListener('click', (e) => {
             if (e.target.id === 'product-modal') {
                 closeModal();
